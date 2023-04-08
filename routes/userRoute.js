@@ -58,7 +58,7 @@ BankRoute.patch("/updatekyc", authorization, async (req, res) => {
 BankRoute.patch("/depositmoney", authorization, async (req, res) => {
   let { amount, user } = req.body;
   try {
-    let newuser = await BankModel.findOne({ _id: user });
+    let newuser = await BankModel.findById({ _id: user });
     if (newuser) {
       await BankModel.findByIdAndUpdate(
         { _id: user },
@@ -80,7 +80,7 @@ BankRoute.patch("/depositmoney", authorization, async (req, res) => {
 BankRoute.patch("/withdrawmoney", authorization, async (req, res) => {
   let { amount, user } = req.body;
   try {
-    let newuser = await BankModel.findOne({ _id: user });
+    let newuser = await BankModel.findById({ _id: user });
     if (newuser) {
       if (newuser.amount >= +amount) {
         await BankModel.findByIdAndUpdate(
@@ -105,7 +105,7 @@ BankRoute.patch("/withdrawmoney", authorization, async (req, res) => {
 
 BankRoute.get("/", authorization, async (req, res) => {
   try {
-    let user = await BankModel.findOne({ _id: req.body.user });
+    let user = await BankModel.findById({ _id: req.body.user });
     if (user) {
       res.send({ user, success: true, msg: "User found" });
     } else {
@@ -169,10 +169,12 @@ BankRoute.patch('/transfermoney', authorization, async (req, res) => {
 BankRoute.delete("/closeaccount", authorization, async (req, res) => {
   try {
     await BankModel.findByIdAndDelete({ _id: req.body.user });
-    res.send({ msg:"Successfully deleted", success:true})
+    res.send({ msg: "Successfully deleted", success: true })
   } catch (error) {
-    res.send({ msg:"Something went wrong", success:false})
+    res.send({ msg: "Something went wrong", success: false })
   }
-})
+});
+
+
 
 module.exports = BankRoute;
